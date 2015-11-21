@@ -20,7 +20,7 @@
   }
 
   angular
-    .module('trellojs', ['ngRoute', 'trellojs.controllers'])
+    .module('trellojs', ['ngRoute', 'trellojs.controllers', 'trellojs.templates'])
     .config(config);
 
 })();

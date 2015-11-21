@@ -10,6 +10,12 @@ var sass        = require('gulp-sass');
 var inject = require('gulp-inject');
 var wiredep = require('wiredep').stream;
 
+var templateCache = require('gulp-angular-templatecache');
+var gulpif = require('gulp-if');
+var minifyCss = require('gulp-minify-css');
+var useref = require('gulp-useref');
+var uglify = require('gulp-uglify');
+var uncss = require('gulp-uncss');
 // Static Server + watching scss/html files
 gulp.task('serve', function() {
 
@@ -60,4 +66,71 @@ gulp.task('watch', function(){
 
 });
 
+
 gulp.task('default', ['serve', 'inject','wiredep', 'watch']);
+
+
+
+
+// PRODUCTION
+//
+gulp.task('templates', function(){
+  gulp.src('./app/views/**/*.tpl.html')
+    .pipe(templateCache({
+      root: 'views/',
+      module: 'trellojs.templates',
+      standalone: true
+      }))
+    .pipe(gulp.dest('./app/scripts'));
+  });
+gulp.task('compress', function(){
+  gulp.src('./app/index.html')
+    .pipe(useref())
+    .pipe(gulpif('*.js', uglify(
+      {
+        mangle: false,
+        ouptut: {
+          inline_script: true,
+          comments: false
+        },
+        compress: {
+      		sequences: true,
+      		dead_code: true,
+      		conditionals: true,
+      		booleans: true,
+      		unused: true,
+      		if_return: true,
+      		join_vars: true,
+      		drop_console: true
+	     }
+      }
+    )))
+    .pipe(gulpif('*.css', minifyCss()))
+    .pipe(gulp.dest('./dist'));
+  });
+
+gulp.task('copy', function(){
+    gulp.src('./app/index.html')
+      .pipe(useref())
+      .pipe(gulp.dest('./dist'));
+    gulp.src('./app/lib/fontawesome/fonts/**')
+      .pipe(gulp.dest('./dist/fonts'));
+  });
+
+gulp.task('uncss',function(){
+  gulp.src('./dist/css/style.min.css')
+    .pipe(uncss({
+      html: ['./app/index.html', './app/views/trello-login.tpl.html', './app/views/trello-new-card.tpl.html'],
+      ignore: ['(.*)bootstrap-select(.*)']
+      }))
+    .pipe(gulp.dest('./dist/css'));
+  });
+
+gulp.task('build', ['templates', 'compress', 'copy']);
+
+
+gulp.task('server-dist', function(){
+  browserSync.init({
+        server: { baseDir: './dist', middleware: [ historyApiFallback() ]}
+    });
+  });
