@@ -149,8 +149,12 @@
 
     this.create = function () {
       self.isSending = true;
+      var topicForTicket = '';
+      if(self.ticket.topic){
+        topicForTicket = '['+self.ticket.topic.name+'] ';
+      }
       var newCard =
-        {name: '['+self.ticket.topic.name+'] '+self.ticket.title,
+        {name: topicForTicket+self.ticket.title,
         desc: self.ticket.text,
         pos: 'top',
         due: null,
