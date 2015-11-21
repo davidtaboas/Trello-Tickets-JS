@@ -1,0 +1,10 @@
+.fa-heart {
+  color: red; }
+
+.bootstrap-select {
+  width: 100% !important; }
+  .bootstrap-select button {
+    margin: 0 auto !important;
+    display: block;
+    float: none !important;
+    width: 100% !important; }

@@ -1,0 +1,84 @@
+<div class="row">
+
+  <div class="col-md-12" ng-hide="newcard.isSending">
+    <h3>Write the user story <span class="label label-default">New</span></h3>
+    <!-- panel principal -->
+
+      <div class="row">
+        <!-- formulario -->
+        <section>
+          <form class="form-horizontal" name="createTicket" role="form" ng-submit="newcard.create()">
+            <!-- topic/site -->
+            <fieldset class="form-group form-group-lg">
+              <label class="col-sm-2 control-label">Topic</label>
+              <div class="col-sm-10">
+                <select class="form-control"
+                        ng-model="newcard.ticket.topic"
+                        ng-options="topic.name for topic in newcard.topics track by topic.id">
+                </select>
+              </div>
+            </fieldset>
+            <fieldset class="form-group form-group-lg">
+              <label class="col-sm-2 control-label">Title</label>
+              <div class="col-sm-10">
+                <input class="form-control input-lg"
+                        type="text"
+                        placeholder="Task title"
+                        ng-model="newcard.ticket.title">
+              </div>
+            </fieldset>
+            <fieldset class="form-group form-group-lg">
+              <label class="col-sm-2 control-label">Description</label>
+              <div class="col-sm-10">
+                <textarea class="form-control input-lg"
+                          placeholder="Description"
+                          ng-model="newcard.ticket.text"></textarea>
+              </div>
+            </fieldset>
+
+            <!-- who are you? -->
+            <fieldset class="form-group form-group-lg">
+              <label class="col-sm-2 control-label">Who are you?</label>
+              <div class="col-sm-10">
+                <div class="radio" ng-repeat="member in newcard.members">
+                  <label>
+                    <input type="radio" ng-model="newcard.ticket.member" value="{{ member.id }}">
+                    {{ member.fullName }}
+                  </label>
+                </div>
+              </div>
+          </fieldset>
+
+
+            <!-- priority -->
+            <fieldset class="form-group form-group-sm">
+              <label class="col-sm-2 control-label">Ready?</label>
+              <div class="col-sm-10">
+                <button class="btn btn-primary btn-lg"
+                        type="submit" ng-disable="!createTicket.$valid">
+                  <span class="fa fa-rocket"> Send</span>
+                </button>
+                <a ng-click="newcard.changeBoard()" type="button" class="btn btn-default">Change board</a>
+              </div>
+          </fieldset>
+
+          </form>
+
+        </section>
+      </div>
+
+
+  </div>
+  <div class="col-md-12" ng-show="newcard.isSending">
+    <div class="alert alert-success alert-dismissible fade in" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+      <h4>The ticket has been created correctly!</h4>
+      <p>Check more details on Trello.</p>
+      <p>
+        <a href="{{newcard.ticket.url}}" type="button" class="btn btn-danger">See ticket in Trello</a>
+        <a ng-click="newcard.reset()" type="button" class="btn btn-info">Send another one</a>
+        <a ng-click="newcard.changeBoard()" type="button" class="btn btn-default">Change board</a>
+      </p>
+    </div>
+  </div>
+</div>

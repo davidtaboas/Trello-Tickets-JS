@@ -1,0 +1,85 @@
+<div class="row">
+  <div class="col-md-12">
+    <!-- Autenticación y selección de board -->
+    <div class="" ng-show="!authenticated">
+      <div class="jumbotron alert-warning">
+
+        <p class="text-center">
+          <button class="btn btn-success" ng-click="authenticate()" tabindex="0">Authenticate</button>
+        </p>
+      </div>
+
+        <br/>
+        <div class="alert alert-info alert-dismissible fade in" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+          <h4>Configure your Trello Board!</h4>
+          <p>If you want send tickets with this tools, your Trello Board should have two lists, at least:</p>
+          <p>
+            <ul>
+              <li><strong><em>Topic List</em></strong>: the cards on this lists represents the topics/sites/categories for tickets.</li>
+              <li><strong><em>Backlog list</em></strong>: this list stores all tasks as Trello cards.</li>
+            </ul>
+          </p>
+        </div>
+    </div>
+    <div class="" ng-show="authenticated">
+
+      <form name="setTrello" class="form-horizontal">
+        <fieldset class="form-group form-group-lg">
+          <label class="col-sm-2 control-label">Select board</label>
+          <div class="col-sm-10">
+            <p class="text-center" ng-hide="boardsLoaded">
+              <i class="fa fa-spinner fa-spin"></i>
+            </p>
+            <select class="selectpicker show-tick show-menu-arrow"
+                    data-live-search="true"
+                    ng-model="selectedBoard"
+                    ng-options="board.name for board in boards track by board.id"
+                    ng-change="selectBoard()"
+                    >
+            </select>
+          </div>
+        </fieldset>
+        <fieldset class="form-group form-group-sm" ng-show="selectedBoard">
+          <label class="col-sm-2 control-label">Select Topic list</label>
+          <div class="col-sm-10">
+            <select class="form-control"
+                    ng-model="trellologin.topic"
+                    ng-options="list.name for list in allLists track by list.id"
+                    ng-change="getTopics()">
+            </select>
+          </div>
+        </fieldset>
+        <fieldset class="form-group form-group-sm" ng-show="selectedBoard">
+          <label class="col-sm-2 control-label">Select Backlog list</label>
+          <div class="col-sm-10">
+            <select class="form-control"
+                    ng-model="trellologin.backlog"
+                    ng-options="list.name for list in allLists track by list.id">
+            </select>
+          </div>
+        </fieldset>
+        <a  href="/new"
+            class="btn btn-primary btn-lg"
+            type="submit"
+            ng-disable="!setTrello.$valid"
+            ng-click="save()">
+          <span class="fa fa-rocket"> Go</span>
+        </a>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <!-- tareas en proceso -->
+  <div class="col-md-4" ng-repeat="dev in developments">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title"><a href="{{ dev.url }}">{{ dev.name }}</a></h3>
+      </div>
+      <div class="panel-body">{{ dev.desc }}</div>
+    </div>
+  </div>
+</div>
